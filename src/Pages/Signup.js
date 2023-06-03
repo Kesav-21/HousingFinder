@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {AiFillEyeInvisible,AiFillEye} from 'react-icons/ai'
 import { Link } from 'react-router-dom';
 import OAuth from '../Components/OAuth';
+import {getAuth,createUserWithEmailAndPassword,updateProfile} from 'firebase/auth';
+import {doc,setDoc,serverTimestamp} from 'firebase/firestore';
+import {db} from '../firebase';
+import { toast } from 'react-toastify';
 
 export default function Signup() {
   const [showPassword,setShowPassword]=useState(false);
@@ -10,13 +15,35 @@ export default function Signup() {
     email:"",
     password:"",
   })
-  const {fname,email,password}=FormData;
+  const navigate=useNavigate();
+  const {fname,email,password}=formData;
   const onChangeHandler=(e)=>{
     setFormData((prevState)=>({
       ...prevState,
       [e.target.id]:e.target.value
 
     }))
+  }
+
+  const onSubmit= async(e)=>{
+    e.preventDefault()
+    try {
+      const auth=getAuth()
+      const userCredential=await createUserWithEmailAndPassword(auth,email,password);
+      updateProfile(auth.currentUser,{
+        displayName:fname
+      })
+      const user=userCredential.user
+      const formDataCopy={...formData}
+      delete formDataCopy.password
+      formDataCopy.timestamp=serverTimestamp();
+
+      await setDoc(doc(db,'users',user.uid),formDataCopy)
+      toast.success("Sign Up successful")
+      navigate('/')
+    } catch(error){
+      toast.error("Something went Wrong");
+    }
   }
   return (
     <section>
@@ -27,7 +54,7 @@ export default function Signup() {
           className='w-full rounded-2xl'/>
         </div>
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-          <form>
+          <form onSubmit={onSubmit}>
             <input type="text" id='fname' value={fname} onChange={onChangeHandler} placeholder='Full Name'  className='w-full mb-6 px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out' />
             <input type="email" id='email' value={email} onChange={onChangeHandler} placeholder='Email Address'  className='w-full mb-6 px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out' />
             <div className='relative mb-6'>
@@ -35,7 +62,7 @@ export default function Signup() {
             {showPassword? <AiFillEyeInvisible className='absolute right-3 top-3 text-xl cursor-pointer' onClick={()=>setShowPassword((prevState)=>!prevState)}/>:<AiFillEye className='absolute right-3 top-3 text-xl cursor-pointer' onClick={()=>setShowPassword((prevState)=>!prevState)} />}
             </div>
             <div className='flex justify-between whitespace-nowrap text-sm sm:text-lg'>
-              <p className='mb-6 '>Have a account?<Link className='text-red-600 cursor-pointer hover:text-red-700 transition duration-200 ease-in-out ml-1' to="/sign-in">Register</Link></p>
+              <p className='mb-6 '>Have a account?<Link className='text-red-600 cursor-pointer hover:text-red-700 transition duration-200 ease-in-out ml-1' to="/sign-in">Sign In</Link></p>
               <p><Link className='text-blue-600 cursor-pointer hover:text-blue-800 transition duration-200 ease-in-out ml-1' to='/forgot-password'>Forgot Password?</Link></p>
             </div>
             <button className='w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800' type="submit">Sign Up</button>
