@@ -31,7 +31,7 @@ export default function SignIn() {
       }
 
     }catch(error){
-      console.log(error);
+      toast.error("Check your email and password");
     }
   }
 
