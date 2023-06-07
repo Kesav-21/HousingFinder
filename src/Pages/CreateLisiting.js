@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 const CreateLisiting = () => {
   const navigate=useNavigate();
   const auth=getAuth();
-  const [geoLocationEnabled,setGeoLocationEnabled]=useState(true);
+  const [geoLocationEnabled,setGeoLocationEnabled]=useState(false);
   const [loading,setLoading]=useState(false);
   const [formData, setFormData] = useState({
     type: "rent",
