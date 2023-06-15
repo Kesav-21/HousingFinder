@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import logo from '../assets/svg/logo.svg';
+import logo from '../assets/images/logo.png';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -28,7 +28,7 @@ export default function Header() {
           <img
             src={logo}
             alt="logo"
-            className="h-5 cursor-pointer"
+            className="h-9 cursor-pointer"
             onClick={() => navigate("/")}
           />
         </div>
