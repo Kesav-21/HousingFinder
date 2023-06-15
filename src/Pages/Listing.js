@@ -57,7 +57,7 @@ const Listing = () => {
         <div className='flex flex-col md:flex-row max-w-6xl lg:mx-auto m-4 p-4 rounded-lg border-3 shadow-lg bg-white lg:space-x-5'>
             <div className=' w-full '>
                 <p className='text-2xl font-bold mb-3 text-blue-900 '>
-                    {listing.name}-${listing.offer ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","):listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}
+                    {listing.name}- Rs {listing.offer ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g,","):listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}
                     {listing.type==="rent"? '/ month':""}
                 </p>
                 <p className='flex items-center mt-6 mb-3 font-semibold'>
@@ -67,7 +67,7 @@ const Listing = () => {
                 <div className='flex justify-start items-center space-x-4 w-[75%]'>
                     <p className='bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md'>{listing.type==="rent"?"Rent":"Sale"}</p>
                 {listing.offer &&(
-                    <p className='w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md'>${listing.regularPrice-listing.discountedPrice} discount</p>
+                    <p className='w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md'>Rs.{listing.regularPrice-listing.discountedPrice} discount</p>
                 )}
                 </div>
                 <p className='mt-3 mb-3'><span className='font-semibold'>Description - </span>{listing.description}</p>
@@ -85,8 +85,6 @@ const Listing = () => {
                 {contactLandlord && (
                     <Contact userRef={listing.userRef} listing={listing}/>
                 )}
-                
-                
             </div>
             <div className='w-full h-[200px] md:h-[400px] z-10 overflow-x-hidden mt-6 md:mt-0 md:ml-2'>
             <MapContainer center={[listing.geolocation.lat,listing.geolocation.lng]} zoom={13} scrollWheelZoom={false} style={{height:"100%",width:"100%"}}> 
